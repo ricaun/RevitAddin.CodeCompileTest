@@ -2,7 +2,6 @@
 using Autodesk.Revit.UI;
 using ricaun.Revit.UI;
 using System;
-using System.Linq;
 
 namespace RevitAddin.CodeCompileTest.Revit
 {
@@ -13,28 +12,13 @@ namespace RevitAddin.CodeCompileTest.Revit
         public Result OnStartup(UIControlledApplication application)
         {
             ribbonPanel = application.CreatePanel("CodeCompile");
-            _ = ribbonPanel.GetRibbonPanel().RibbonControl;
 
-            var solidColorBrush = new System.Windows.Media.SolidColorBrush(
-                new System.Windows.Media.Color()
-                {
-                    R = 255,
-                    G = 155,
-                    B = 255,
-                    A = 100
-                });
-            ribbonPanel.GetRibbonPanel().CustomPanelTitleBarBackground = solidColorBrush;
-            ribbonPanel.GetRibbonPanel().CustomPanelBackground = solidColorBrush;
-            ribbonPanel.GetRibbonPanel().CustomSlideOutPanelBackground = System.Windows.Media.Brushes.Red;
-
-
-
-            var b = ribbonPanel.AddPushButton<Commands.Command>();
             ribbonPanel.AddPushButton<Commands.Command<string>>("string");
             ribbonPanel.AddPushButton<Commands.Command<int>>("int");
+            ribbonPanel.AddPushButton<Commands.Command<double>>("double");
+            ribbonPanel.AddPushButton<Commands.Command<App>>("App");
 
-            ribbonPanel.AddItem(NewPushButtonData<Commands.Command<double>>("double"));
-            ribbonPanel.AddItem(NewPushButtonData<Commands.Command<App>>("App"));
+            ribbonPanel.AddPushButton<Commands.CommandAddButton>("Add Button");
 
             foreach (var item in ribbonPanel.GetRibbonItems())
             {
@@ -56,16 +40,5 @@ namespace RevitAddin.CodeCompileTest.Revit
             return Result.Succeeded;
         }
 
-        public PushButtonData NewPushButtonData<TExternalCommand>(string name = null, string text = null) where TExternalCommand : class, IExternalCommand, new()
-        {
-            var commandType = typeof(TExternalCommand);
-            var currentDll = commandType.Assembly.Location;
-            string fullname = commandType.FullName;
-            string targetName = commandType.Name;
-            if (name != null) targetName = name;
-            PushButtonData currentBtn = new PushButtonData(targetName, targetName, currentDll, fullname);
-            if (text != null) currentBtn.Text = text;
-            return currentBtn;
-        }
     }
 }
