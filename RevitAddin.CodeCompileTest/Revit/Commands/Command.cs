@@ -3,6 +3,7 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using System;
 using System.CodeDom;
+using System.Linq;
 using System.Reflection;
 
 namespace RevitAddin.CodeCompileTest.Revit.Commands
@@ -21,9 +22,40 @@ namespace RevitAddin.CodeCompileTest.Revit.Commands
                 Console.WriteLine(item);
             }
 
+            //new RvtView().ShowDialog();
+
+            foreach (var item in Autodesk.Windows.ComponentManager.QuickAccessToolBar.Items)
+            {
+                Console.WriteLine($"{item.AutomationName} {item.Id}");
+            }
+
+            var items = Autodesk.Windows.ComponentManager.QuickAccessToolBar.Items;
+            var i = items.FirstOrDefault(e => e.AutomationName == "App");
+
+            if (i != null)
+                Autodesk.Windows.ComponentManager.QuickAccessToolBar.Items.Remove(i);
+
+
+
             return Result.Succeeded;
         }
     }
+
+    [Transaction(TransactionMode.Manual)]
+    public class Command<T> : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elementSet)
+        {
+            UIApplication uiapp = commandData.Application;
+
+            var t = typeof(T);
+
+            System.Windows.MessageBox.Show(t.Name);
+
+            return Result.Succeeded;
+        }
+    }
+
     class NewCodeDomClass
     {
         CodeCompileUnit targetUnit;
