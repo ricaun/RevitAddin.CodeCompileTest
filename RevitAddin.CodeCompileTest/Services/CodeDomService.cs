@@ -33,9 +33,9 @@ namespace RevitAddin.CodeCompileTest.Services
               public class Teste {}
             }";
 
-            var csu0 = new CodeSnippetCompileUnit(source);
+            var targetUnit = new CodeSnippetCompileUnit(source);
 
-            return GenerateCode(csu0);
+            return GenerateCode(targetUnit);
         }
 
         public CodeCompileUnit BuildHelloWorldGraph()
@@ -98,6 +98,7 @@ namespace RevitAddin.CodeCompileTest.Services
             }
             foreach (var keyAssmbley in nameAssemblies)
             {
+                //Console.WriteLine($"Assmbley: {keyAssmbley.Key}");
                 compilerParametes.ReferencedAssemblies.Add(keyAssmbley.Value.Location);
             }
             #endregion
