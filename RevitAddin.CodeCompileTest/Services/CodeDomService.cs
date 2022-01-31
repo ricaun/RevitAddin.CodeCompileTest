@@ -19,7 +19,7 @@ namespace RevitAddin.CodeCompileTest.Services
             namespace CodeNamespace 
             {
               [Transaction(TransactionMode.Manual)]
-              public class CommandNow : IExternalCommand
+              public class Command : IExternalCommand
               {     
                 public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elementSet)
                 {
