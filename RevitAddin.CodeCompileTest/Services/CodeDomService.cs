@@ -19,7 +19,7 @@ namespace RevitAddin.CodeCompileTest.Services
             namespace CodeNamespace 
             {
               [Transaction(TransactionMode.Manual)]
-              public class Command : IExternalCommand
+              public class CommandNow : IExternalCommand
               {     
                 public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elementSet)
                 {
@@ -36,45 +36,6 @@ namespace RevitAddin.CodeCompileTest.Services
             var targetUnit = new CodeSnippetCompileUnit(source);
 
             return GenerateCode(targetUnit);
-        }
-
-        public CodeCompileUnit BuildHelloWorldGraph()
-        {
-
-            CodeCompileUnit targetUnit = new CodeCompileUnit();
-
-            // Declare a new namespace called Samples.
-            CodeNamespace samples = new CodeNamespace("Samples");
-            // Add the new namespace to the compile unit.
-            targetUnit.Namespaces.Add(samples);
-
-            // Add the new namespace import for the System namespace.
-            samples.Imports.Add(new CodeNamespaceImport("System"));
-
-            // Declare a new type called Class1.
-            CodeTypeDeclaration class1 = new CodeTypeDeclaration("Class1");
-            // Add the new type to the namespace type collection.
-            samples.Types.Add(class1);
-
-            // Declare a new code entry point method.
-            CodeEntryPointMethod start = new CodeEntryPointMethod();
-
-            // Create a type reference for the System.Console class.
-            CodeTypeReferenceExpression csSystemConsoleType = new CodeTypeReferenceExpression("System.Console");
-
-            // Build a Console.WriteLine statement.
-            CodeMethodInvokeExpression cs1 = new CodeMethodInvokeExpression(
-                csSystemConsoleType, "WriteLine",
-                new CodePrimitiveExpression("Hello World!"));
-
-            // Add the WriteLine call to the statement collection.
-            start.Statements.Add(cs1);
-
-            // Add the code entry point method to
-            // the Members collection of the type.
-            class1.Members.Add(start);
-
-            return targetUnit;
         }
 
         public Assembly GenerateCode(params CodeCompileUnit[] compilationUnits)
@@ -96,10 +57,10 @@ namespace RevitAddin.CodeCompileTest.Services
                     nameAssemblies[assembly.GetName().Name] = assembly;
                 }
             }
-            foreach (var keyAssmbley in nameAssemblies)
+            foreach (var keyAssembly in nameAssemblies)
             {
-                //Console.WriteLine($"Assmbley: {keyAssmbley.Key}");
-                compilerParametes.ReferencedAssemblies.Add(keyAssmbley.Value.Location);
+                //Console.WriteLine($"Assembly: {keyAssembly.Key}");
+                compilerParametes.ReferencedAssemblies.Add(keyAssembly.Value.Location);
             }
             #endregion
 
