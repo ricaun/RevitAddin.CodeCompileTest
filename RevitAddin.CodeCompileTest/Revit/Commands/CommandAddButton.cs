@@ -1,10 +1,10 @@
 ﻿using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using ricaun.Revit.UI;
 
 using RevitAddin.CodeCompileTest.Services;
 using System;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -29,26 +29,26 @@ namespace RevitAddin.CodeCompileTest.Revit.Commands
             foreach (var command in commands)
             {
                 Console.WriteLine($"Command: {command}");
-                var name = $"{command} {DateTime.Now}";
-                var text = $"{command.Name}";
-                PushButtonData currentBtn = NewPushButton(command, name, text);
-
-                App.ribbonPanel.AddItem(currentBtn);
+                var ribbonPanel = App.ribbonPanel;
+                ribbonPanel.AddItem(ribbonPanel.NewPushButtonData(command))
+                    .SetLargeImage(GetLargeImageUri().GetBitmapSource());
             }
 
             return Result.Succeeded;
         }
 
-        private PushButtonData NewPushButton(Type command, string name = null, string text = null)
+        public string GetLargeImageUri()
         {
-            var commandType = command;
-            var currentDll = commandType.Assembly.Location;
-            string fullname = commandType.FullName;
-            string targetName = commandType.Name;
-            if (name != null) targetName = name;
-            PushButtonData currentBtn = new PushButtonData(targetName, targetName, currentDll, fullname);
-            if (text != null) currentBtn.Text = text;
-            return currentBtn;
+            var baseImage = @"https://img.icons8.com/small/32/000000/circled-{0}.png";
+            var imageLarge = string.Format(baseImage, GetLetter());
+            return imageLarge;
+        }
+
+        public char GetLetter()
+        {
+            var num = DateTime.Now.Ticks % 26;
+            char let = (char)('a' + num);
+            return let;
         }
     }
 }
