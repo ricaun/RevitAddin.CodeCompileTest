@@ -7,6 +7,7 @@ using RevitAddin.CodeCompileTest.Services;
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace RevitAddin.CodeCompileTest.Revit.Commands
 {
@@ -29,8 +30,9 @@ namespace RevitAddin.CodeCompileTest.Revit.Commands
             foreach (var command in commands)
             {
                 Console.WriteLine($"Command: {command}");
-                var ribbonPanel = App.ribbonPanel;
-                ribbonPanel.AddItem(ribbonPanel.NewPushButtonData(command))
+                var ribbonPanel = App.RibbonPanel;
+
+                var b = ribbonPanel.AddItem(ribbonPanel.NewPushButtonData(command))
                     .SetLargeImage(GetLargeImageUri().GetBitmapSource());
             }
 
@@ -43,10 +45,10 @@ namespace RevitAddin.CodeCompileTest.Revit.Commands
             var imageLarge = string.Format(baseImage, GetLetter());
             return imageLarge;
         }
-
-        public char GetLetter()
+        private static int Count { get; set; }
+        private char GetLetter()
         {
-            var num = DateTime.Now.Ticks % 26;
+            var num = Count++ % 26;
             char let = (char)('a' + num);
             return let;
         }
